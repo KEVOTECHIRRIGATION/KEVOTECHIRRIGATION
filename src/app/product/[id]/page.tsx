@@ -2,7 +2,7 @@ import { db } from '../../../lib/db';
 import { notFound } from 'next/navigation';
 import AddToCartBtn from '../../../components/AddToCartBtn';
 import Image from 'next/image';
-import { TruckIcon, ShieldIcon, PhoneIcon, RefreshIcon } from '../../../components/Icons';
+import { TruckIcon, ShieldIcon, PhoneIcon } from '../../../components/Icons';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import type { Product } from '../../../types';

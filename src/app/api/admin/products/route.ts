@@ -28,8 +28,8 @@ export async function POST(request: Request) {
     }
 
     const { rows } = await db.query(
-      `INSERT INTO products (name, category, price, description, image, updated_at)
-       VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *`,
+      `INSERT INTO products (name, category, price, description, image)
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
       [name.trim(), category.trim(), parsedPrice, description?.trim() ?? null, image ?? null]
     );
 

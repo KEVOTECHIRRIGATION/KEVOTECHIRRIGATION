@@ -2,6 +2,7 @@ import { db } from '../../../lib/db';
 import { notFound } from 'next/navigation';
 import AddToCartBtn from '../../../components/AddToCartBtn';
 import Image from 'next/image';
+import { TruckIcon, ShieldIcon, PhoneIcon, RefreshIcon } from '../../../components/Icons';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import type { Product } from '../../../types';
@@ -94,15 +95,14 @@ export default async function ProductPage({ params }: Params) {
           <AddToCartBtn product={product} />
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid #e2e8f0' }}>
-            {[
-              { icon: '🚚', label: 'Nationwide Delivery' },
-              { icon: '🛡️', label: 'Quality Guaranteed' },
-              { icon: '📞', label: 'Expert Consultation' },
-              { icon: '↩️', label: 'Easy Returns' },
-            ].map((v) => (
-              <div key={v.label} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <span style={{ fontSize: '1.25rem' }}>{v.icon}</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{v.label}</span>
+            {([
+              { Icon: TruckIcon,  label: 'Nationwide Delivery',  color: '#7c3aed' },
+              { Icon: ShieldIcon, label: 'Quality Guaranteed',   color: '#0284c7' },
+              { Icon: PhoneIcon,  label: 'Expert Consultation',  color: '#16a34a' },
+            ] as const).map(({ Icon, label, color }) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <span style={{ color, flexShrink: 0 }}><Icon size={20} color={color} /></span>
+                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{label}</span>
               </div>
             ))}
           </div>

@@ -1,10 +1,48 @@
 import { db } from '../lib/db';
 import { CATEGORIES } from '../lib/categories';
 import ProductCard from '../components/ProductCard';
+import * as Icons from '../components/Icons';
 import type { Product } from '../types';
 import Link from 'next/link';
 
 export const revalidate = 60;
+
+// Map icon name string → actual component
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
+  PipeIcon:      Icons.PipeIcon,
+  HdpeIcon:      Icons.HdpeIcon,
+  SprinklerIcon: Icons.SprinklerIcon,
+  TapeIcon:      Icons.TapeIcon,
+  ValveIcon:     Icons.ValveIcon,
+  PumpIcon:      Icons.PumpIcon,
+};
+
+const WHY_US = [
+  {
+    IconComp: Icons.ShieldIcon,
+    bg: '#e0f2fe', color: '#0284c7',
+    title: 'Quality Assured',
+    desc: 'ISO-grade materials built to withstand harsh conditions.',
+  },
+  {
+    IconComp: Icons.GlobeIcon,
+    bg: '#dcfce7', color: '#16a34a',
+    title: 'Global Standards',
+    desc: 'Imported and locally sourced premium-grade equipment.',
+  },
+  {
+    IconComp: Icons.HandshakeIcon,
+    bg: '#fef3c7', color: '#d97706',
+    title: 'Expert Support',
+    desc: 'Free consultation and farm layout planning services.',
+  },
+  {
+    IconComp: Icons.TruckIcon,
+    bg: '#f3e8ff', color: '#7c3aed',
+    title: 'Nationwide Delivery',
+    desc: 'Fast, reliable shipping to all 47 counties.',
+  },
+];
 
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
@@ -38,13 +76,18 @@ export default async function Home() {
       <section className="section container">
         <h2 className="section-title">Shop by <span>Category</span></h2>
         <div className="categories-grid">
-          {CATEGORIES.map((cat) => (
-            <Link href={`/shop/${cat.slug}`} key={cat.slug} className="category-card">
-              <div className="category-icon">{cat.icon}</div>
-              <h3 className="category-title">{cat.label}</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.5rem' }}>Explore range →</p>
-            </Link>
-          ))}
+          {CATEGORIES.map((cat) => {
+            const IconComp = ICON_MAP[cat.icon];
+            return (
+              <Link href={`/shop/${cat.slug}`} key={cat.slug} className="category-card">
+                <div className="category-icon">
+                  {IconComp && <IconComp size={32} color="currentColor" />}
+                </div>
+                <h3 className="category-title">{cat.label}</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.5rem' }}>Explore range →</p>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -83,16 +126,13 @@ export default async function Home() {
           We don't just sell products — we deliver comprehensive agricultural water management solutions built to international standards.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '2rem' }}>
-          {[
-            { icon: '🛡️', bg: '#e0f2fe', color: '#0284c7', title: 'Quality Assured', desc: 'ISO-grade materials built to withstand harsh conditions.' },
-            { icon: '🌍', bg: '#dcfce7', color: '#16a34a', title: 'Global Standards', desc: 'Imported and locally sourced premium-grade equipment.' },
-            { icon: '🤝', bg: '#fef3c7', color: '#d97706', title: 'Expert Support', desc: 'Free consultation and farm layout planning services.' },
-            { icon: '🚚', bg: '#f3e8ff', color: '#7c3aed', title: 'Nationwide Delivery', desc: 'Fast, reliable shipping to all 47 counties.' },
-          ].map((item) => (
-            <div key={item.title} style={{ textAlign: 'center', padding: '2rem 1.5rem', backgroundColor: 'white', borderRadius: '1rem', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
-              <div style={{ width: '64px', height: '64px', backgroundColor: item.bg, color: item.color, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', fontSize: '1.5rem' }}>{item.icon}</div>
-              <h4 style={{ fontWeight: 700, marginBottom: '0.5rem', fontSize: '1rem' }}>{item.title}</h4>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{item.desc}</p>
+          {WHY_US.map(({ IconComp, bg, color, title, desc }) => (
+            <div key={title} style={{ textAlign: 'center', padding: '2rem 1.5rem', backgroundColor: 'white', borderRadius: '1rem', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
+              <div style={{ width: '64px', height: '64px', backgroundColor: bg, color, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+                <IconComp size={28} color={color} />
+              </div>
+              <h4 style={{ fontWeight: 700, marginBottom: '0.5rem', fontSize: '1rem' }}>{title}</h4>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{desc}</p>
             </div>
           ))}
         </div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -14,10 +15,14 @@ const NAV_LINKS = [
 
 export default function Header() {
   const { totalItems, setIsCartOpen } = useCart();
+  const { customer, logout, setIsAuthOpen, setAuthMode } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+
+  const openLogin = () => { setAuthMode("login"); setIsAuthOpen(true); };
+  const openRegister = () => { setAuthMode("register"); setIsAuthOpen(true); };
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -72,6 +77,21 @@ export default function Header() {
           </nav>
 
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            {/* Auth buttons */}
+            {customer ? (
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-primary)", maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  Hi, {customer.name.split(" ")[0]}
+                </span>
+                <button onClick={logout} className="btn btn-outline" style={{ padding: "0.4rem 0.85rem", fontSize: "0.8rem" }}>Sign Out</button>
+              </div>
+            ) : (
+              <div className="auth-btns" style={{ display: "flex", gap: "0.5rem" }}>
+                <button onClick={openLogin} className="btn btn-outline" style={{ padding: "0.45rem 0.9rem", fontSize: "0.85rem" }}>Sign In</button>
+                <button onClick={openRegister} className="btn btn-primary" style={{ padding: "0.45rem 0.9rem", fontSize: "0.85rem" }}>Register</button>
+              </div>
+            )}
+
             <button
               className="btn btn-primary cart-btn"
               onClick={() => setIsCartOpen(true)}

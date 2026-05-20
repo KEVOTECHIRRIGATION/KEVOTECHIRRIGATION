@@ -1,31 +1,22 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+const ADMIN_SESSION_COOKIE = 'kevotech_admin';
+const ADMIN_LOGIN_PATH     = '/admin/login';
+
 export function middleware(req: NextRequest) {
-  // Only apply basic auth to the /admin route
-  if (req.nextUrl.pathname.startsWith('/admin')) {
-    const basicAuth = req.headers.get('authorization');
-    const url = req.nextUrl;
+  const { pathname } = req.nextUrl;
 
-    if (basicAuth) {
-      const authValue = basicAuth.split(' ')[1];
-      const [user, pwd] = atob(authValue).split(':');
+  // Protect all /admin routes except the login page itself
+  if (pathname.startsWith('/admin') && pathname !== ADMIN_LOGIN_PATH) {
+    const adminCookie = req.cookies.get(ADMIN_SESSION_COOKIE)?.value;
 
-      const expectedUser = process.env.ADMIN_USERNAME;
-      const expectedPwd = process.env.ADMIN_PASSWORD;
-
-      if (user === expectedUser && pwd === expectedPwd) {
-        return NextResponse.next();
-      }
+    if (adminCookie !== 'admin_authenticated') {
+      // Redirect to the proper login page
+      const loginUrl = req.nextUrl.clone();
+      loginUrl.pathname = ADMIN_LOGIN_PATH;
+      return NextResponse.redirect(loginUrl);
     }
-
-    url.pathname = '/api/auth';
-    return new NextResponse('Auth required', {
-      status: 401,
-      headers: {
-        'WWW-Authenticate': 'Basic realm="Secure Area"',
-      },
-    });
   }
 
   return NextResponse.next();

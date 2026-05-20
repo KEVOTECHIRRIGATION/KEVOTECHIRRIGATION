@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "../context/CartContext";
+import { AuthProvider } from "../context/AuthContext";
 import Header from "../components/Header";
 import CartDrawer from "../components/CartDrawer";
+import AuthModal from "../components/AuthModal";
 
 export const metadata: Metadata = {
   title: "Kevotech Irrigation | Premium Agricultural Solutions",
@@ -17,10 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CartProvider>
-          <Header />
-          <CartDrawer />
-          <main>{children}</main>
+        <AuthProvider>
+          <CartProvider>
+            <Header />
+            <CartDrawer />
+            <AuthModal />
+            <main>{children}</main>
           <footer className="footer">
             <div className="container">
               <div className="footer-grid">
@@ -66,6 +70,7 @@ export default function RootLayout({
             </div>
           </footer>
         </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

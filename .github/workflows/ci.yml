@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  ci:
+    name: Typecheck, Lint & Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+          CLOUDINARY_CLOUD_NAME: dummy
+          CLOUDINARY_API_KEY: dummy
+          CLOUDINARY_API_SECRET: dummy
+          MPESA_CONSUMER_KEY: dummy
+          MPESA_CONSUMER_SECRET: dummy
+          MPESA_PASSKEY: dummy
+          MPESA_SHORTCODE: dummy
+          MPESA_CALLBACK_URL: https://example.com/api/mpesa/callback
+          MPESA_ENV: sandbox
+          ADMIN_USERNAME: admin
+          ADMIN_PASSWORD: admin
+          BOT_TOKEN: dummy
+          CHAT_ID: dummy
+          GROQ_API_KEY: dummy
+          NEXT_PUBLIC_BASE_URL: https://example.com

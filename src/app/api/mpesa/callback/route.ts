@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     const callback: StkCallback = body?.Body?.stkCallback || body?.stkCallback || body;
 
     const CheckoutRequestID = callback.CheckoutRequestID || body.checkout_request_id;
-    const ResultCode = callback.ResultCode ?? (body.status === 'Success' ? 0 : 1);
+    const ResultCode = callback.ResultCode ?? (body.status?.toLowerCase() === 'success' || body.status === 'Completed' ? 0 : 1);
 
     if (ResultCode === 0) {
       const find = (name: string) =>

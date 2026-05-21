@@ -5,9 +5,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://kevotech-irrigation.com';
 
   // Get all active products for dynamic sitemap
-  let products: { id: string, created_at?: string }[] = [];
+  let products: { id: string }[] = [];
   try {
-    const { rows } = await db.query('SELECT id, created_at FROM products');
+    const { rows } = await db.query('SELECT id FROM products');
     products = rows;
   } catch (e) {
     console.error('Failed to fetch products for sitemap', e);
@@ -15,7 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const productUrls = products.map((product) => ({
     url: `${baseUrl}/shop/${product.id}`,
-    lastModified: product.created_at ? new Date(product.created_at) : new Date(),
+    lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));

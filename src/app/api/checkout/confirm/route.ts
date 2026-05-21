@@ -112,7 +112,7 @@ export async function POST(request: Request) {
        RETURNING id`,
       [
         normalizedPhone,
-        session.cart_items,
+        JSON.stringify(session.cart_items),
         session.total_price,
         customerId,
         name.trim(),

@@ -125,11 +125,13 @@ export async function POST(request: Request) {
 
     const orderId: number = orderRows[0].id;
 
-    // Trigger M-Pesa STK push
-    const stkResult = await initiateStkPush(normalizedPhone, Number(session.total_price), orderId);
+    // Trigger M-Pesa STK push via PayHero
+    const stkResult: any = await initiateStkPush(normalizedPhone, Number(session.total_price), orderId);
+    const checkoutReqId = stkResult.CheckoutRequestID || stkResult.checkout_request_id || `ORDER-${orderId}`;
+    
     await client.query(
       'UPDATE orders SET checkout_request_id = $1 WHERE id = $2',
-      [stkResult.CheckoutRequestID, orderId]
+      [checkoutReqId, orderId]
     );
 
     await client.query('COMMIT');

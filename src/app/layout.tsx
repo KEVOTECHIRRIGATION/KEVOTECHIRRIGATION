@@ -83,7 +83,7 @@ export default function RootLayout({
                 </div>
               </div>
               <div className="footer-bottom">
-                <p>&copy; {new Date().getFullYear()} Kevotech Irrigation. All rights reserved. Built to International Standards.</p>
+                <p>&copy; {new Date().getFullYear()} Kevotech Irrigation. All rights reserved. Built with ❤️ by MesharkTech.</p>
               </div>
             </div>
           </footer>

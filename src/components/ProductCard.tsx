@@ -32,7 +32,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className="product-content" style={{ flexGrow: 1 }}>
           <span className="product-category">{product.category}</span>
           <h3 className="product-title">{product.name}</h3>
-          <p className="product-desc" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+          <p className="product-desc" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", whiteSpace: "pre-wrap" }}>
             {product.description ?? "Premium irrigation equipment built to international standards."}
           </p>
         </div>

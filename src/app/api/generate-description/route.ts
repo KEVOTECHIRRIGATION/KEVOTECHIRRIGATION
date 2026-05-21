@@ -23,20 +23,19 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        max_tokens: 256,
+        max_tokens: 600,
         messages: [
           {
             role: 'user',
-            content: `Write a professional, SEO-optimized product description (3 sentences max) for an agricultural irrigation product sold in Kenya.
+            content: `Write a high-converting, professional e-commerce product description for an agricultural irrigation product sold in Kenya, similar to the high-quality descriptions found on Jumia or Amazon.
 Product name: "${name}"
 Category: "${category}"
 
-Requirements:
-- Highlight durability and crop yield benefits
-- Mention suitability for Kenyan/East African farming conditions
-- End with a call to action
-- Do NOT include pricing or brand names other than the product name
-- Plain text only, no markdown`,
+Format Requirements:
+1. Start with a catchy, 1-2 sentence hook highlighting the main benefit.
+2. Provide a "Key Features & Benefits" section with 3-5 bullet points (use the • symbol).
+3. Keep the tone professional, persuasive, and tailored for Kenyan farming conditions.
+4. Plain text only (no markdown like asterisks or hashtags), but use line breaks to separate paragraphs and bullet points.`,
           },
         ],
       }),

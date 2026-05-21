@@ -88,7 +88,7 @@ export default async function ProductPage({ params }: Params) {
 
           <div style={{ padding: '1.5rem', backgroundColor: '#f1f5f9', borderRadius: '0.75rem', marginBottom: '2rem' }}>
             <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem' }}>Product Description</h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.75, fontSize: '0.95rem' }}>
+            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.75, fontSize: '0.95rem', whiteSpace: 'pre-wrap' }}>
               {product.description ?? 'Premium agricultural equipment designed to meet international standards for efficiency and durability. Ensure optimal crop yield with Kevotech\'s reliable irrigation solutions.'}
             </p>
           </div>

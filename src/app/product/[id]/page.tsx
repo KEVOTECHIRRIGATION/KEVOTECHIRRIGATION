@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import AddToCartBtn from '../../../components/AddToCartBtn';
 import Image from 'next/image';
 import { TruckIcon, ShieldIcon, PhoneIcon } from '../../../components/Icons';
+import ProductReviews from '../../../components/ProductReviews';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import type { Product } from '../../../types';
@@ -108,6 +109,7 @@ export default async function ProductPage({ params }: Params) {
           </div>
         </div>
       </div>
+      <ProductReviews productId={String(product.id)} />
     </div>
   );
 }

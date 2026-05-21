@@ -4,6 +4,19 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatPrice } from "../../lib/utils";
 import type { Order } from "../../types";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend
+} from "recharts";
 
 type Stats = {
   total_orders: string;
@@ -12,6 +25,7 @@ type Stats = {
   completed_orders: string;
   total_products: string;
   total_customers: string;
+  total_leads: string;
 };
 
 const STATUS_DOT: Record<string, string> = {
@@ -21,9 +35,13 @@ const STATUS_DOT: Record<string, string> = {
   CANCELLED: "#64748b",
 };
 
+const COLORS = ['#0284c7', '#16a34a', '#d97706', '#7c3aed', '#db2777', '#059669'];
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [recent, setRecent] = useState<Order[]>([]);
+  const [revenueTrend, setRevenueTrend] = useState<any[]>([]);
+  const [categoryDist, setCategoryDist] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,6 +51,8 @@ export default function AdminDashboard() {
         if (data.success) {
           setStats(data.stats);
           setRecent(data.recentOrders);
+          setRevenueTrend(data.revenueTrend);
+          setCategoryDist(data.categoryDist.map((item: any) => ({ ...item, value: Number(item.value) })));
         }
       })
       .finally(() => setLoading(false));
@@ -42,23 +62,22 @@ export default function AdminDashboard() {
     ? [
         { label: "Total Revenue",    value: formatPrice(stats.total_revenue),   color: "#16a34a", bg: "#dcfce7", icon: "KES" },
         { label: "Total Orders",     value: stats.total_orders,                  color: "#0284c7", bg: "#e0f2fe", icon: "📋" },
-        { label: "Pending",          value: stats.pending_orders,                color: "#d97706", bg: "#fef3c7", icon: "⏳" },
         { label: "Completed",        value: stats.completed_orders,              color: "#059669", bg: "#d1fae5", icon: "✅" },
         { label: "Products",         value: stats.total_products,                color: "#7c3aed", bg: "#ede9fe", icon: "📦" },
         { label: "Customers",        value: stats.total_customers,               color: "#db2777", bg: "#fce7f3", icon: "👥" },
+        { label: "Email Leads",      value: stats.total_leads,                   color: "#d97706", bg: "#fef3c7", icon: "📧" },
       ]
     : [];
 
   return (
     <div style={{ padding: "2rem", maxWidth: "1200px" }}>
-      {/* Page header */}
       <div style={{ marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>Dashboard</h1>
+        <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>Dashboard Analytics</h1>
         <p style={{ color: "#64748b", marginTop: "0.25rem", fontSize: "0.9rem" }}>Overview of your store performance.</p>
       </div>
 
       {loading ? (
-        <div style={{ padding: "4rem", textAlign: "center", color: "#64748b" }}>Loading…</div>
+        <div style={{ padding: "4rem", textAlign: "center", color: "#64748b" }}>Loading Analytics…</div>
       ) : (
         <>
           {/* Stats grid */}
@@ -72,6 +91,65 @@ export default function AdminDashboard() {
                 <div style={{ fontSize: "1.75rem", fontWeight: 800, color, lineHeight: 1 }}>{value}</div>
               </div>
             ))}
+          </div>
+
+          {/* Charts Row */}
+          <div style={{ display: "flex", gap: "1.5rem", marginBottom: "2.5rem", flexWrap: "wrap" }}>
+            
+            {/* Line Chart: Revenue */}
+            <div style={{ flex: "2 1 500px", backgroundColor: "white", borderRadius: "12px", border: "1px solid #e2e8f0", padding: "1.5rem", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 700, margin: "0 0 1.5rem", color: "#0f172a" }}>Monthly Revenue</h2>
+              <div style={{ height: "300px", width: "100%" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={revenueTrend} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 12 }} dy={10} />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: "#64748b", fontSize: 12 }} 
+                      tickFormatter={(val) => `Ksh ${val >= 1000 ? (val/1000).toFixed(0) + 'k' : val}`}
+                    />
+                    <Tooltip 
+                      formatter={(value: any) => [`Ksh ${Number(value).toLocaleString()}`, "Revenue"]}
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+                    />
+                    <Line type="monotone" dataKey="revenue" stroke="#16a34a" strokeWidth={3} dot={{ r: 4, fill: "#16a34a", strokeWidth: 0 }} activeDot={{ r: 6 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Pie Chart: Categories */}
+            <div style={{ flex: "1 1 300px", backgroundColor: "white", borderRadius: "12px", border: "1px solid #e2e8f0", padding: "1.5rem", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 700, margin: "0 0 1.5rem", color: "#0f172a" }}>Products by Category</h2>
+              <div style={{ height: "300px", width: "100%" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={categoryDist}
+                      cx="50%"
+                      cy="45%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      {categoryDist.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      formatter={(value: any) => [value, "Products"]}
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+                    />
+                    <Legend verticalAlign="bottom" height={36} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '12px' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
           </div>
 
           {/* Recent orders */}
@@ -117,24 +195,6 @@ export default function AdminDashboard() {
                 </table>
               </div>
             )}
-          </div>
-
-          {/* Quick links */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "1rem", marginTop: "1.5rem" }}>
-            {[
-              { href: "/admin/products",  label: "Manage Products",  icon: "📦" },
-              { href: "/admin/orders",    label: "Manage Orders",    icon: "📋" },
-              { href: "/admin/customers", label: "View Customers",   icon: "👥" },
-              { href: "/admin/analytics", label: "View Analytics",   icon: "📊" },
-            ].map(({ href, label, icon }) => (
-              <Link key={href} href={href} style={{ backgroundColor: "white", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "1.25rem", textDecoration: "none", display: "flex", flexDirection: "column", gap: "0.5rem", transition: "box-shadow 0.15s" }}
-                onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)")}
-                onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-              >
-                <span style={{ fontSize: "1.5rem" }}>{icon}</span>
-                <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "#0f172a" }}>{label}</span>
-              </Link>
-            ))}
           </div>
         </>
       )}

@@ -174,8 +174,13 @@ export default function AdminOrdersPage() {
                         <td style={{ padding: "0.875rem 1rem", fontWeight: 700, color: "#0f172a" }}>#{order.id}</td>
                         <td style={{ padding: "0.875rem 1rem" }}>
                           <div style={{ fontWeight: 600, fontSize: "0.875rem", color: "#0f172a" }}>{order.customer_name ?? "Guest"}</div>
-                          <div style={{ fontSize: "0.75rem", color: "#94a3b8", fontFamily: "monospace" }}>{order.phone_number}</div>
-                          {order.county && <div style={{ fontSize: "0.7rem", color: "#cbd5e1" }}>{order.county}</div>}
+                          <div style={{ fontSize: "0.75rem", color: "#64748b", fontFamily: "monospace", marginTop: "2px" }}>{order.phone_number}</div>
+                          {order.customer_email && <div style={{ fontSize: "0.75rem", color: "#64748b" }}>{order.customer_email}</div>}
+                          <div style={{ fontSize: "0.75rem", color: "#64748b", marginTop: "4px" }}>
+                            {order.delivery_address && <span>{order.delivery_address}</span>}
+                            {order.county && <span>, {order.county}</span>}
+                          </div>
+                          {order.notes && <div style={{ fontSize: "0.75rem", color: "#d97706", marginTop: "4px", fontStyle: "italic", maxWidth: "250px", whiteSpace: "normal" }}>"{order.notes}"</div>}
                         </td>
                         <td style={{ padding: "0.875rem 1rem", fontSize: "0.875rem", color: "#64748b" }}>{items.length} item{items.length !== 1 ? "s" : ""}</td>
                         <td style={{ padding: "0.875rem 1rem", fontWeight: 700, color: "#059669", whiteSpace: "nowrap" }}>{formatPrice(order.total_price)}</td>

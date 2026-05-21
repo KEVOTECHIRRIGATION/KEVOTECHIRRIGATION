@@ -17,6 +17,15 @@ interface StkCallback {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    const { searchParams } = new URL(request.url);
+    const secret = searchParams.get('secret');
+
+    // Security Phase 1: Validate Webhook Secret to prevent spoofing
+    if (secret !== process.env.MPESA_WEBHOOK_SECRET) {
+      console.warn('Unauthorized M-Pesa webhook attempt detected.');
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
     const callback: StkCallback = body?.Body?.stkCallback;
 
     if (!callback) {

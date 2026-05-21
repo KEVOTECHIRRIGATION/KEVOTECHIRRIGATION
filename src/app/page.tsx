@@ -1,6 +1,7 @@
 import { db } from '../lib/db';
 import { CATEGORIES } from '../lib/categories';
 import ProductCard from '../components/ProductCard';
+import Newsletter from '../components/Newsletter';
 import * as Icons from '../components/Icons';
 import type { Product } from '../types';
 import Link from 'next/link';
@@ -137,6 +138,9 @@ export default async function Home() {
           ))}
         </div>
       </section>
+
+      {/* ── Newsletter / Lead Capture ── */}
+      <Newsletter />
 
       {/* ── CTA Banner ── */}
       <section style={{ background: 'linear-gradient(135deg, var(--primary-dark), var(--secondary-color))', color: 'white', padding: '5rem 0', textAlign: 'center' }}>

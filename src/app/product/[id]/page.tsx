@@ -45,7 +45,63 @@ export default async function ProductPage({ params }: Params) {
   if (!product) notFound();
 
   return (
-    <div className="container" style={{ padding: '2rem 1.5rem 5rem' }}>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": product.name,
+            "image": product.image ? [product.image] : [],
+            "description": product.description ?? `Buy ${product.name} from Kevotech Irrigation.`,
+            "sku": String(product.id),
+            "offers": {
+              "@type": "Offer",
+              "url": `https://www.kevotechirrigation.com/product/${product.id}`,
+              "priceCurrency": "KES",
+              "price": product.price,
+              "availability": "https://schema.org/InStock",
+              "itemCondition": "https://schema.org/NewCondition",
+              "hasMerchantReturnPolicy": {
+                "@type": "MerchantReturnPolicy",
+                "applicableCountry": "KE",
+                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                "merchantReturnDays": 14,
+                "returnMethod": "https://schema.org/ReturnByMail"
+              },
+              "shippingDetails": {
+                "@type": "OfferShippingDetails",
+                "shippingRate": {
+                  "@type": "MonetaryAmount",
+                  "value": 0,
+                  "currency": "KES"
+                },
+                "shippingDestination": {
+                  "@type": "DefinedRegion",
+                  "addressCountry": "KE"
+                },
+                "deliveryTime": {
+                  "@type": "ShippingDeliveryTime",
+                  "handlingTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 0,
+                    "maxValue": 1,
+                    "unitCode": "d"
+                  },
+                  "transitTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 1,
+                    "maxValue": 3,
+                    "unitCode": "d"
+                  }
+                }
+              }
+            }
+          })
+        }}
+      />
+      <div className="container" style={{ padding: '2rem 1.5rem 5rem' }}>
       <nav style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '2rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
         <Link href="/" style={{ color: 'var(--primary-color)' }}>Home</Link>
         <span>/</span>
@@ -116,5 +172,6 @@ export default async function ProductPage({ params }: Params) {
       </div>
       <ProductReviews productId={String(product.id)} />
     </div>
+    </>
   );
 }

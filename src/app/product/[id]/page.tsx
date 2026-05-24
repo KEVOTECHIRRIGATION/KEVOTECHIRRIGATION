@@ -84,6 +84,11 @@ export default async function ProductPage({ params }: Params) {
           </h1>
           <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary-dark)', marginBottom: '2rem' }}>
             {formatPrice(product.price)}
+            {product.min_order_quantity && product.min_order_quantity > 1 && (
+              <div style={{ fontSize: '0.9rem', color: '#64748b', fontWeight: 600, marginTop: '0.5rem' }}>
+                Minimum Order Quantity: {product.min_order_quantity} units
+              </div>
+            )}
           </div>
 
           <div style={{ padding: '1.5rem', backgroundColor: '#f1f5f9', borderRadius: '0.75rem', marginBottom: '2rem' }}>

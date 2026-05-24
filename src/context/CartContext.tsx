@@ -46,7 +46,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (existing) {
         return prev.map((i) => (i.id === product.id ? { ...i, qty: i.qty + qty } : i));
       }
-      return [...prev, { ...product, qty }];
+      const initialQty = product.minQty && product.minQty > 1 ? Math.max(qty, product.minQty) : qty;
+      return [...prev, { ...product, qty: initialQty }];
     });
     setIsCartOpen(true);
   }, []);
@@ -56,11 +57,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const updateQty = useCallback((id: number, qty: number) => {
-    if (qty <= 0) {
-      setItems((prev) => prev.filter((i) => i.id !== id));
-    } else {
-      setItems((prev) => prev.map((i) => (i.id === id ? { ...i, qty } : i)));
-    }
+    setItems((prev) => {
+      const item = prev.find((i) => i.id === id);
+      if (!item) return prev;
+      const min = item.minQty || 1;
+      
+      if (qty <= 0) {
+        return prev.filter((i) => i.id !== id);
+      }
+      
+      const clampedQty = qty < min ? min : qty;
+      return prev.map((i) => (i.id === id ? { ...i, qty: clampedQty } : i));
+    });
   }, []);
 
   const clearCart = useCallback(() => setItems([]), []);

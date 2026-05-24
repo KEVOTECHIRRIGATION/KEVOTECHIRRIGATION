@@ -18,7 +18,7 @@ export async function GET(_: Request, { params }: Params) {
 export async function PUT(request: Request, { params }: Params) {
   const { id } = await params;
   try {
-    const { name, category, price, description, image } = await request.json();
+    const { name, category, price, description, image, min_order_quantity } = await request.json();
 
     if (!name?.trim() || !category?.trim() || price == null) {
       return NextResponse.json(
@@ -31,12 +31,14 @@ export async function PUT(request: Request, { params }: Params) {
     if (isNaN(parsedPrice) || parsedPrice <= 0) {
       return NextResponse.json({ success: false, error: 'Invalid price' }, { status: 400 });
     }
+    
+    const parsedMinQty = parseInt(min_order_quantity, 10) || 1;
 
     const { rows } = await db.query(
       `UPDATE products
-       SET name = $1, category = $2, price = $3, description = $4, image = $5, updated_at = NOW()
-       WHERE id = $6 RETURNING *`,
-      [name.trim(), category.trim(), parsedPrice, description?.trim() ?? null, image ?? null, id]
+       SET name = $1, category = $2, price = $3, description = $4, image = $5, min_order_quantity = $6, updated_at = NOW()
+       WHERE id = $7 RETURNING *`,
+      [name.trim(), category.trim(), parsedPrice, description?.trim() ?? null, image ?? null, parsedMinQty, id]
     );
 
     if (!rows.length) return NextResponse.json({ success: false, error: 'Not found' }, { status: 404 });

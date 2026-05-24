@@ -13,7 +13,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { name, category, price, description, image } = await request.json();
+    const { name, category, price, description, image, min_order_quantity } = await request.json();
 
     if (!name?.trim() || !category?.trim() || price == null) {
       return NextResponse.json(
@@ -26,11 +26,13 @@ export async function POST(request: Request) {
     if (isNaN(parsedPrice) || parsedPrice <= 0) {
       return NextResponse.json({ success: false, error: 'Invalid price' }, { status: 400 });
     }
+    
+    const parsedMinQty = parseInt(min_order_quantity, 10) || 1;
 
     const { rows } = await db.query(
-      `INSERT INTO products (name, category, price, description, image)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [name.trim(), category.trim(), parsedPrice, description?.trim() ?? null, image ?? null]
+      `INSERT INTO products (name, category, price, description, image, min_order_quantity)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [name.trim(), category.trim(), parsedPrice, description?.trim() ?? null, image ?? null, parsedMinQty]
     );
 
     return NextResponse.json({ success: true, product: rows[0] }, { status: 201 });

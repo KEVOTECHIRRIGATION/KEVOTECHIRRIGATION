@@ -81,9 +81,13 @@ export default function CartDrawer() {
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.25rem" }}>
                     <div style={{ display: "flex", alignItems: "center", border: "1px solid #e2e8f0", borderRadius: "6px", overflow: "hidden" }}>
-                      <button onClick={() => updateQty(item.id, item.qty - 1)} style={{ padding: "0.25rem 0.5rem", color: "#64748b", cursor: "pointer", background: "#f8fafc", fontSize: "1rem", lineHeight: 1 }}>−</button>
+                      <button 
+                        onClick={() => updateQty(item.id, item.qty - 1)} 
+                        disabled={item.qty <= (item.minQty || 1)}
+                        style={{ padding: "0.25rem 0.5rem", color: item.qty <= (item.minQty || 1) ? "#cbd5e1" : "#64748b", cursor: item.qty <= (item.minQty || 1) ? "not-allowed" : "pointer", background: "#f8fafc", fontSize: "1rem", lineHeight: 1, border: "none" }}
+                      >−</button>
                       <span style={{ fontSize: "0.875rem", fontWeight: 600, minWidth: "1.5rem", textAlign: "center", padding: "0 0.25rem" }}>{item.qty}</span>
-                      <button onClick={() => updateQty(item.id, item.qty + 1)} style={{ padding: "0.25rem 0.5rem", color: "#64748b", cursor: "pointer", background: "#f8fafc", fontSize: "1rem", lineHeight: 1 }}>+</button>
+                      <button onClick={() => updateQty(item.id, item.qty + 1)} style={{ padding: "0.25rem 0.5rem", color: "#64748b", cursor: "pointer", background: "#f8fafc", fontSize: "1rem", lineHeight: 1, border: "none" }}>+</button>
                     </div>
                     <button onClick={() => removeFromCart(item.id)} style={{ color: "#ef4444", background: "none", border: "none", cursor: "pointer", fontSize: "0.7rem", padding: "0.2rem" }}>Remove</button>
                   </div>

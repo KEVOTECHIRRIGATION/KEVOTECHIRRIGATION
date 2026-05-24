@@ -38,7 +38,7 @@ export default function AdminSidebar() {
         <div style={{ padding: collapsed ? "1.25rem 0" : "1.25rem 1.25rem", borderBottom: "1px solid #1e293b", display: "flex", alignItems: "center", justifyContent: collapsed ? "center" : "space-between", gap: "0.5rem", minHeight: "64px" }}>
           {!collapsed && (
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", overflow: "hidden" }}>
-              <div style={{ width: "28px", height: "28px", backgroundColor: "#16a34a", borderRadius: "6px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem" }}>K</div>
+              <img src="/kevotech-logo.jpg" alt="Kevotech" style={{ width: "28px", height: "28px", objectFit: "contain", borderRadius: "4px" }} />
               <span style={{ color: "white", fontWeight: 700, fontSize: "0.9rem", whiteSpace: "nowrap" }}>Kevotech Admin</span>
             </div>
           )}

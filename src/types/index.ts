@@ -5,6 +5,7 @@ export interface Product {
   description: string | null;
   image: string | null;
   price: number | string;
+  min_order_quantity?: number;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -32,6 +33,7 @@ export interface CartItem {
   price: number;
   image: string | null;
   qty: number;
+  minQty?: number;
 }
 
 export interface Customer {

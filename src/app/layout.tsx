@@ -47,11 +47,12 @@ export default function RootLayout({
             <div className="container">
               <div className="footer-grid">
                 <div className="footer-col">
-                  <div className="logo" style={{ color: 'white', marginBottom: '1rem' }}>
-                    <div className="logo-icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg>
-                    </div>
-                    Kevotech Irrigation
+                  <div className="logo" style={{ color: 'white', marginBottom: '1rem', display: "flex" }}>
+                    <img 
+                      src="/kevotech-logo.jpg" 
+                      alt="Kevotech Irrigation" 
+                      style={{ height: "65px", width: "auto", objectFit: "contain", borderRadius: "8px" }} 
+                    />
                   </div>
                   <p style={{ color: '#94a3b8', lineHeight: '1.6' }}>Leading provider of high-quality irrigation systems and agricultural solutions tailored for optimal crop yield and water efficiency.</p>
                 </div>

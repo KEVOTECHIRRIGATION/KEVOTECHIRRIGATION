@@ -7,11 +7,12 @@ import type { Product } from "../types";
 
 export default function AddToCartBtn({ product }: { product: Product }) {
   const { addToCart } = useCart();
-  const [qty, setQty] = useState(1);
+  const minQty = product.min_order_quantity || 1;
+  const [qty, setQty] = useState(minQty);
   const [added, setAdded] = useState(false);
 
   const handleAdd = () => {
-    addToCart({ ...product, price: parsePrice(product.price) }, qty);
+    addToCart({ ...product, price: parsePrice(product.price), minQty }, qty);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -20,7 +21,7 @@ export default function AddToCartBtn({ product }: { product: Product }) {
     <div style={{ display: "flex", gap: "1rem", alignItems: "center", marginTop: "1.5rem" }}>
       <div style={{ display: "flex", alignItems: "center", border: "1px solid #cbd5e1", borderRadius: "0.5rem", overflow: "hidden" }}>
         <button
-          onClick={() => setQty(Math.max(1, qty - 1))}
+          onClick={() => setQty(Math.max(minQty, qty - 1))}
           style={{ padding: "0.75rem 1rem", background: "#f8fafc", color: "#475569", fontWeight: "bold", fontSize: "1.1rem" }}
           aria-label="Decrease quantity"
         >
@@ -29,8 +30,8 @@ export default function AddToCartBtn({ product }: { product: Product }) {
         <input
           type="number"
           value={qty}
-          min={1}
-          onChange={(e) => setQty(Math.max(1, parseInt(e.target.value) || 1))}
+          min={minQty}
+          onChange={(e) => setQty(Math.max(minQty, parseInt(e.target.value) || minQty))}
           style={{ width: "56px", textAlign: "center", border: "none", padding: "0.75rem 0", fontWeight: "bold", outline: "none", fontFamily: "inherit" }}
           aria-label="Quantity"
         />

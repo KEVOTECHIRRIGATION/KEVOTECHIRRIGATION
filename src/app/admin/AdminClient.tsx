@@ -22,11 +22,12 @@ type FormState = {
   name: string;
   category: string;
   price: string;
+  min_order_quantity: string;
   description: string;
   imageUrl: string;
 };
 
-const EMPTY_FORM: FormState = { name: "", category: CATEGORIES[0], price: "", description: "", imageUrl: "" };
+const EMPTY_FORM: FormState = { name: "", category: CATEGORIES[0], price: "", min_order_quantity: "1", description: "", imageUrl: "" };
 
 export default function AdminClient({ initialProducts }: { initialProducts: Product[] }) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -63,6 +64,7 @@ export default function AdminClient({ initialProducts }: { initialProducts: Prod
       name: product.name,
       category: product.category,
       price: String(product.price),
+      min_order_quantity: String(product.min_order_quantity ?? 1),
       description: product.description ?? "",
       imageUrl: product.image ?? "",
     });
@@ -106,6 +108,7 @@ export default function AdminClient({ initialProducts }: { initialProducts: Prod
         name: form.name.trim(),
         category: form.category,
         price: parseFloat(form.price),
+        min_order_quantity: parseInt(form.min_order_quantity) || 1,
         description: form.description.trim() || null,
         image: imageUrl,
       };
@@ -235,6 +238,9 @@ export default function AdminClient({ initialProducts }: { initialProducts: Prod
                   </td>
                   <td style={{ padding: "1rem 0.75rem", fontWeight: 700, color: "var(--primary-dark)", whiteSpace: "nowrap" }}>
                     {formatPrice(product.price)}
+                    {product.min_order_quantity && product.min_order_quantity > 1 && (
+                      <div style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 500, marginTop: "0.2rem" }}>Min qty: {product.min_order_quantity}</div>
+                    )}
                   </td>
                   <td style={{ padding: "1rem 0.75rem", maxWidth: "260px" }}>
                     <p style={{ margin: 0, fontSize: "0.825rem", color: "#64748b", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
@@ -350,6 +356,20 @@ export default function AdminClient({ initialProducts }: { initialProducts: Prod
                     style={input}
                   />
                 </div>
+              </div>
+
+              <div>
+                <label style={label}>Min Order Quantity *</label>
+                <input
+                  required
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={form.min_order_quantity}
+                  onChange={(e) => setForm({ ...form, min_order_quantity: e.target.value })}
+                  placeholder="e.g. 1"
+                  style={input}
+                />
               </div>
 
               <div>

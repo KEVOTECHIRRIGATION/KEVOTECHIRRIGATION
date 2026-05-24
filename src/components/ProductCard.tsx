@@ -43,7 +43,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <button
           className="btn btn-primary"
           style={{ padding: "0.6rem 1rem", fontSize: "0.9rem" }}
-          onClick={() => addToCart({ ...product, price: parsePrice(product.price) })}
+          onClick={() => addToCart({ ...product, price: parsePrice(product.price), minQty: product.min_order_quantity })}
         >
           Add to Cart
         </button>
